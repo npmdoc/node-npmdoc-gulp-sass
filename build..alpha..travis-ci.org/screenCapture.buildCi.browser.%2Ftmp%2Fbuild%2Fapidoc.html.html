@@ -56,6 +56,33 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.gulp-sass">
+            function <span class="apidocSignatureSpan"></span>gulp-sass
+            <span class="apidocSignatureSpan">(options, sync)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.compiler.render">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>compiler.render
+            <span class="apidocSignatureSpan">(opts, cb)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.compiler.renderSync">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>compiler.renderSync
+            <span class="apidocSignatureSpan">(opts)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.logError">
             function <span class="apidocSignatureSpan">gulp-sass.</span>logError
             <span class="apidocSignatureSpan">(error)</span>
@@ -68,6 +95,15 @@
             <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.sync">
             function <span class="apidocSignatureSpan">gulp-sass.</span>sync
             <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.toString">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>toString
+            <span class="apidocSignatureSpan">()</span>
             </a>
 
         </li>
@@ -169,6 +205,32 @@
         <li>
 
             <span class="apidocSignatureSpan">string <span class="apidocSignatureSpan">gulp-sass.compiler.</span>info</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sass.compiler.render">module gulp-sass.compiler.render</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.compiler.render.render">
+            function <span class="apidocSignatureSpan">gulp-sass.compiler.</span>render
+            <span class="apidocSignatureSpan">(opts, cb)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sass.compiler.renderSync">module gulp-sass.compiler.renderSync</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.compiler.renderSync.renderSync">
+            function <span class="apidocSignatureSpan">gulp-sass.compiler.</span>renderSync
+            <span class="apidocSignatureSpan">(opts)</span>
+            </a>
 
         </li>
 
@@ -499,10 +561,398 @@
 
     </ol></li>
 
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sass.logError">module gulp-sass.logError</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.logError.logError">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>logError
+            <span class="apidocSignatureSpan">(error)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sass.sync">module gulp-sass.sync</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.sync.sync">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>sync
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sass.toString">module gulp-sass.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sass.toString.toString">
+            function <span class="apidocSignatureSpan">gulp-sass.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.gulp-sass" id="apidoc.module.gulp-sass">module gulp-sass</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.gulp-sass" id="apidoc.element.gulp-sass.gulp-sass">
+        function <span class="apidocSignatureSpan"></span>gulp-sass
+        <span class="apidocSignatureSpan">(options, sync)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function gulpSass(options, sync) {
+  return through.obj(function(file, enc, cb) {
+    var opts,
+        filePush,
+        errorM,
+        callback,
+        result;
+
+    if (file.isNull()) {
+      return cb(null, file);
+    }
+    if (file.isStream()) {
+      return cb(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
+    }
+    if (path.basename(file.path).indexOf('_') === 0) {
+      return cb();
+    }
+    if (!file.contents.length) {
+      file.path = gutil.replaceExtension(file.path, '.css');
+      return cb(null, file);
+    }
+
+
+    opts = clonedeep(options || {});
+    opts.data = file.contents.toString();
+
+    // we set the file path here so that libsass can correctly resolve import paths
+    opts.file = file.path;
+
+    // Ensure `indentedSyntax` is true if a `.sass` file
+    if (path.extname(file.path) === '.sass') {
+      opts.indentedSyntax = true;
+    }
+
+    // Ensure file's parent directory in the include path
+    if (opts.includePaths) {
+      if (typeof opts.includePaths === 'string') {
+        opts.includePaths = [opts.includePaths];
+      }
+    }
+    else {
+      opts.includePaths = [];
+    }
+
+    opts.includePaths.unshift(path.dirname(file.path));
+
+    // Generate Source Maps if plugin source-map present
+    if (file.sourceMap) {
+      opts.sourceMap = file.path;
+      opts.omitSourceMapUrl = true;
+      opts.sourceMapContents = true;
+    }
+
+    //////////////////////////////
+    // Handles returning the file to the stream
+    //////////////////////////////
+    filePush = function filePush(sassObj) {
+      var sassMap,
+          sassMapFile,
+          sassFileSrc,
+          sassFileSrcPath,
+          sourceFileIndex;
+
+      // Build Source Maps!
+      if (sassObj.map) {
+        // Transform map into JSON
+        sassMap = JSON.parse(sassObj.map.toString());
+        // Grab the stdout and transform it into stdin
+        sassMapFile = sassMap.file.replace(/^stdout$/, 'stdin');
+        // Grab the base file name that's being worked on
+        sassFileSrc = file.relative;
+        // Grab the path portion of the file that's being worked on
+        sassFileSrcPath = path.dirname(sassFileSrc);
+        if (sassFileSrcPath) {
+          //Prepend the path to all files in the sources array except the file that's being worked on
+          sourceFileIndex = sassMap.sources.indexOf(sassMapFile);
+          sassMap.sources = sassMap.sources.map(function(source, index) {
+            return (index === sourceFileIndex) ? source : path.join(sassFileSrcPath, source);
+          });
+        }
+
+        // Remove 'stdin' from souces and replace with filenames!
+        sassMap.sources = sassMap.sources.filter(function(src) {
+          if (src !== 'stdin') {
+            return src;
+          }
+        });
+
+        // Replace the map file with the original file name (but new extension)
+        sassMap.file = gutil.replaceExtension(sassFileSrc, '.css');
+        // Apply the map
+        applySourceMap(file, sassMap);
+      }
+
+      file.contents = sassObj.css;
+      file.path = gutil.replaceExtension(file.path, '.css');
+
+      cb(null, file);
+    };
+
+    //////////////////////////////
+    // Handles error message
+    //////////////////////////////
+    errorM = function errorM(error) {
+      var relativePath = '',
+          filePath = error.file === 'stdin' ? file.path : error.file,
+          message = '';
+
+      filePath = filePath ? filePath : file.path;
+      relativePath = path.relative(process.cwd(), filePath);
+
+      message += gutil.colors.underline(relativePath) + '\n';
+      message += error.formatted;
+
+      error.messageFormatted = message;
+      error.messageOriginal = error.message;
+      error.message = gutil.colors.stripColor(message);
+
+      error.relativePath = relativePath;
+
+      return cb(new gutil.PluginError(
+          PLUGIN_NAME, error
+        ));
+    };
+
+    if (sync !== true) {
+      //////////////////////////////
+      // Async Sass render
+      //////////////////////////////
+      callback = function(error, obj) {
+        if (error) {
+          return errorM(error);
+        }
+        filePush(obj); ...</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.compiler.render" id="apidoc.element.gulp-sass.compiler.render">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>compiler.render
+        <span class="apidocSignatureSpan">(opts, cb)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">compiler.render = function (opts, cb) {
+  var options = getOptions(opts, cb);
+
+  // options.error and options.success are for libsass binding
+  options.error = function(err) {
+    var payload = assign(new Error(), JSON.parse(err));
+
+    if (cb) {
+      options.context.callback.call(options.context, payload, null);
+    }
+  };
+
+  options.success = function() {
+    var result = options.result;
+    var stats = endStats(result.stats);
+    var payload = {
+      css: result.css,
+      map: result.map,
+      stats: stats
+    };
+
+    if (cb) {
+      options.context.callback.call(options.context, null, payload);
+    }
+  };
+
+  var importer = options.importer;
+
+  if (importer) {
+    if (Array.isArray(importer)) {
+      options.importer = [];
+      importer.forEach(function(subject, index) {
+        options.importer[index] = function(file, prev, bridge) {
+          function done(result) {
+            bridge.success(result === module.exports.NULL ? null : result);
+          }
+
+          var result = subject.call(options.context, file, prev, done);
+
+          if (result !== undefined) {
+            done(result);
+          }
+        };
+      });
+    } else {
+      options.importer = function(file, prev, bridge) {
+        function done(result) {
+          bridge.success(result === module.exports.NULL ? null : result);
+        }
+
+        var result = importer.call(options.context, file, prev, done);
+
+        if (result !== undefined) {
+          done(result);
+        }
+      };
+    }
+  }
+
+  var functions = clonedeep(options.functions);
+
+  if (functions) {
+    options.functions = {};
+
+    Object.keys(functions).forEach(function(subject) {
+      var cb = normalizeFunctionSignature(subject, functions[subject]);
+
+      options.functions[cb.signature] = function() {
+        var args = Array.prototype.slice.call(arguments),
+          bridge = args.pop();
+
+        function done(data) {
+          bridge.success(data);
+        }
+
+        var result = tryCallback(cb.callback.bind(options.context), args.concat(done));
+
+        if (result) {
+          done(result);
+        }
+      };
+    });
+  }
+
+  if (options.data) {
+    binding.render(options);
+  } else if (options.file) {
+    binding.renderFile(options);
+  } else {
+    cb({status: 3, message: 'No input specified: provide a file name or a source string to process' });
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  callback = function(error, obj) {
+    if (error) {
+      return errorM(error);
+    }
+    filePush(obj);
+  };
+
+  gulpSass.<span class="apidocCodeKeywordSpan">compiler.render</span>(opts, callback);
+}
+else {
+  //////////////////////////////
+  // Sync Sass render
+  //////////////////////////////
+  try {
+    result = gulpSass.compiler.renderSync(opts);
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.compiler.renderSync" id="apidoc.element.gulp-sass.compiler.renderSync">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>compiler.renderSync
+        <span class="apidocSignatureSpan">(opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">compiler.renderSync = function (opts) {
+  var options = getOptions(opts);
+  var importer = options.importer;
+
+  if (importer) {
+    if (Array.isArray(importer)) {
+      options.importer = [];
+      importer.forEach(function(subject, index) {
+        options.importer[index] = function(file, prev) {
+          var result = subject.call(options.context, file, prev);
+
+          return result === module.exports.NULL ? null : result;
+        };
+      });
+    } else {
+      options.importer = function(file, prev) {
+        var result = importer.call(options.context, file, prev);
+
+        return result === module.exports.NULL ? null : result;
+      };
+    }
+  }
+
+  var functions = clonedeep(options.functions);
+
+  if (options.functions) {
+    options.functions = {};
+
+    Object.keys(functions).forEach(function(signature) {
+      var cb = normalizeFunctionSignature(signature, functions[signature]);
+
+      options.functions[cb.signature] = function() {
+        return tryCallback(cb.callback.bind(options.context), arguments);
+      };
+    });
+  }
+
+  var status;
+  if (options.data) {
+    status = binding.renderSync(options);
+  } else if (options.file) {
+    status = binding.renderFileSync(options);
+  } else {
+    throw new Error('No input specified: provide a file name or a source string to process');
+  }
+
+  var result = options.result;
+
+  if (status) {
+    result.stats = endStats(result.stats);
+    return result;
+  }
+
+  throw assign(new Error(), JSON.parse(result.error));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  gulpSass.compiler.render(opts, callback);
+}
+else {
+  //////////////////////////////
+  // Sync Sass render
+  //////////////////////////////
+  try {
+    result = gulpSass.<span class="apidocCodeKeywordSpan">compiler.renderSync</span>(opts);
+
+    filePush(result);
+  }
+  catch (error) {
+    return errorM(error);
+  }
+}
+...</pre></li>
+    </ul>
+
 
 
     <h2>
@@ -548,6 +998,37 @@ gulp.task('sass:watch', function () {
   gulp.watch('./sass/**/*.scss', ['sass']);
 });
 ```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.toString" id="apidoc.element.gulp-sass.toString">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+if (!file.contents.length) {
+  file.path = gutil.replaceExtension(file.path, '.css');
+  return cb(null, file);
+}
+
+
+opts = clonedeep(options || {});
+opts.data = file.contents.<span class="apidocCodeKeywordSpan">toString</span>();
+
+// we set the file path here so that libsass can correctly resolve import paths
+opts.file = file.path;
+
+// Ensure `indentedSyntax` is true if a `.sass` file
+if (path.extname(file.path) === '.sass') {
+  opts.indentedSyntax = true;
 ...</pre></li>
     </ul>
 
@@ -784,6 +1265,219 @@ else {
 
 
 
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sass.compiler.render" id="apidoc.module.gulp-sass.compiler.render">module gulp-sass.compiler.render</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.compiler.render.render" id="apidoc.element.gulp-sass.compiler.render.render">
+        function <span class="apidocSignatureSpan">gulp-sass.compiler.</span>render
+        <span class="apidocSignatureSpan">(opts, cb)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">render = function (opts, cb) {
+  var options = getOptions(opts, cb);
+
+  // options.error and options.success are for libsass binding
+  options.error = function(err) {
+    var payload = assign(new Error(), JSON.parse(err));
+
+    if (cb) {
+      options.context.callback.call(options.context, payload, null);
+    }
+  };
+
+  options.success = function() {
+    var result = options.result;
+    var stats = endStats(result.stats);
+    var payload = {
+      css: result.css,
+      map: result.map,
+      stats: stats
+    };
+
+    if (cb) {
+      options.context.callback.call(options.context, null, payload);
+    }
+  };
+
+  var importer = options.importer;
+
+  if (importer) {
+    if (Array.isArray(importer)) {
+      options.importer = [];
+      importer.forEach(function(subject, index) {
+        options.importer[index] = function(file, prev, bridge) {
+          function done(result) {
+            bridge.success(result === module.exports.NULL ? null : result);
+          }
+
+          var result = subject.call(options.context, file, prev, done);
+
+          if (result !== undefined) {
+            done(result);
+          }
+        };
+      });
+    } else {
+      options.importer = function(file, prev, bridge) {
+        function done(result) {
+          bridge.success(result === module.exports.NULL ? null : result);
+        }
+
+        var result = importer.call(options.context, file, prev, done);
+
+        if (result !== undefined) {
+          done(result);
+        }
+      };
+    }
+  }
+
+  var functions = clonedeep(options.functions);
+
+  if (functions) {
+    options.functions = {};
+
+    Object.keys(functions).forEach(function(subject) {
+      var cb = normalizeFunctionSignature(subject, functions[subject]);
+
+      options.functions[cb.signature] = function() {
+        var args = Array.prototype.slice.call(arguments),
+          bridge = args.pop();
+
+        function done(data) {
+          bridge.success(data);
+        }
+
+        var result = tryCallback(cb.callback.bind(options.context), args.concat(done));
+
+        if (result) {
+          done(result);
+        }
+      };
+    });
+  }
+
+  if (options.data) {
+    binding.render(options);
+  } else if (options.file) {
+    binding.renderFile(options);
+  } else {
+    cb({status: 3, message: 'No input specified: provide a file name or a source string to process' });
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  callback = function(error, obj) {
+    if (error) {
+      return errorM(error);
+    }
+    filePush(obj);
+  };
+
+  gulpSass.compiler.<span class="apidocCodeKeywordSpan">render</span>(opts, callback);
+}
+else {
+  //////////////////////////////
+  // Sync Sass render
+  //////////////////////////////
+  try {
+    result = gulpSass.compiler.renderSync(opts);
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sass.compiler.renderSync" id="apidoc.module.gulp-sass.compiler.renderSync">module gulp-sass.compiler.renderSync</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.compiler.renderSync.renderSync" id="apidoc.element.gulp-sass.compiler.renderSync.renderSync">
+        function <span class="apidocSignatureSpan">gulp-sass.compiler.</span>renderSync
+        <span class="apidocSignatureSpan">(opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">renderSync = function (opts) {
+  var options = getOptions(opts);
+  var importer = options.importer;
+
+  if (importer) {
+    if (Array.isArray(importer)) {
+      options.importer = [];
+      importer.forEach(function(subject, index) {
+        options.importer[index] = function(file, prev) {
+          var result = subject.call(options.context, file, prev);
+
+          return result === module.exports.NULL ? null : result;
+        };
+      });
+    } else {
+      options.importer = function(file, prev) {
+        var result = importer.call(options.context, file, prev);
+
+        return result === module.exports.NULL ? null : result;
+      };
+    }
+  }
+
+  var functions = clonedeep(options.functions);
+
+  if (options.functions) {
+    options.functions = {};
+
+    Object.keys(functions).forEach(function(signature) {
+      var cb = normalizeFunctionSignature(signature, functions[signature]);
+
+      options.functions[cb.signature] = function() {
+        return tryCallback(cb.callback.bind(options.context), arguments);
+      };
+    });
+  }
+
+  var status;
+  if (options.data) {
+    status = binding.renderSync(options);
+  } else if (options.file) {
+    status = binding.renderFileSync(options);
+  } else {
+    throw new Error('No input specified: provide a file name or a source string to process');
+  }
+
+  var result = options.result;
+
+  if (status) {
+    result.stats = endStats(result.stats);
+    return result;
+  }
+
+  throw assign(new Error(), JSON.parse(result.error));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  gulpSass.compiler.render(opts, callback);
+}
+else {
+  //////////////////////////////
+  // Sync Sass render
+  //////////////////////////////
+  try {
+    result = gulpSass.compiler.<span class="apidocCodeKeywordSpan">renderSync</span>(opts);
+
+    filePush(result);
+  }
+  catch (error) {
+    return errorM(error);
+  }
+}
+...</pre></li>
+    </ul>
 
 
 </div>
@@ -1247,6 +1941,98 @@ else {
     <ul>
     <li>description and source-code<pre class="apidocCodePre">function setValue() { [native code] }</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sass.logError" id="apidoc.module.gulp-sass.logError">module gulp-sass.logError</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.logError.logError" id="apidoc.element.gulp-sass.logError.logError">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>logError
+        <span class="apidocSignatureSpan">(error)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function logError(error) {
+  var message = new gutil.PluginError('sass', error.messageFormatted).toString();
+  process.stderr.write(message + '\n');
+  this.emit('end');
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sass.sync" id="apidoc.module.gulp-sass.sync">module gulp-sass.sync</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.sync.sync" id="apidoc.element.gulp-sass.sync.sync">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>sync
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function sync(options) {
+  return gulpSass(options, true);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+'use strict';
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+
+gulp.task('sass', function () {
+  return gulp.src('./sass/**/*.scss')
+    .pipe(sass.<span class="apidocCodeKeywordSpan">sync</span>().on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+});
+
+gulp.task('sass:watch', function () {
+  gulp.watch('./sass/**/*.scss', ['sass']);
+});
+```
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sass.toString" id="apidoc.module.gulp-sass.toString">module gulp-sass.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sass.toString.toString" id="apidoc.element.gulp-sass.toString.toString">
+        function <span class="apidocSignatureSpan">gulp-sass.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+if (!file.contents.length) {
+  file.path = gutil.replaceExtension(file.path, '.css');
+  return cb(null, file);
+}
+
+
+opts = clonedeep(options || {});
+opts.data = file.contents.<span class="apidocCodeKeywordSpan">toString</span>();
+
+// we set the file path here so that libsass can correctly resolve import paths
+opts.file = file.path;
+
+// Ensure `indentedSyntax` is true if a `.sass` file
+if (path.extname(file.path) === '.sass') {
+  opts.indentedSyntax = true;
+...</pre></li>
     </ul>
 
 
