@@ -695,21 +695,21 @@
   return gulpSass(options, true);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-&#x27;use strict&#x27;;
+**May 6, 2015**
 
-var gulp = require(&#x27;gulp&#x27;);
-var sass = require(&#x27;gulp-sass&#x27;);
+* **Change** :arrow_up: Bump to Node Sass 3.0.0
 
-gulp.task(&#x27;sass&#x27;, function () {
-  return gulp.src(&#x27;./sass/**/*.scss&#x27;)
-    .pipe(sass.<span class="apidocCodeKeywordSpan">sync</span>().on(&#x27;error&#x27;, sass.logError))
-    .pipe(gulp.dest(&#x27;./css&#x27;));
-});
+## v2.0.0-alpha.1
+**March 26, 2015**
 
-gulp.task(&#x27;sass:watch&#x27;, function () {
-  gulp.watch(&#x27;./sass/**/*.scss&#x27;, [&#x27;sass&#x27;]);
-});
-```
+* **New** Added `renderSync` option that can be used through `sass.<span class="apidocCodeKeywordSpan">sync</span>()`
+
+### March 24, 2015
+* **Change** Updated to `node-sass` 3.0.0-alpha.1
+* **New** Added support for `gulp-sourcemaps` including tests
+* **New** Added `.editorconfig` for development consistency
+* **New** Added linting and test for said linting
+* **Change** Updated the README
 ...</pre></li>
     </ul>
 
