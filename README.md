@@ -1,6 +1,6 @@
 # npmdoc-gulp-sass
 
-#### api documentation for  [gulp-sass (v3.1.0)](https://github.com/dlmanning/gulp-sass#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-sass.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-sass) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-sass.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-sass)
+#### basic api documentation for  [gulp-sass (v3.1.0)](https://github.com/dlmanning/gulp-sass#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-sass.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-sass) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-sass.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-sass)
 
 #### Gulp plugin for sass
 
@@ -81,7 +81,8 @@
     "scripts": {
         "test": "mocha test"
     },
-    "version": "3.1.0"
+    "version": "3.1.0",
+    "bin": {}
 }
 ```
 
